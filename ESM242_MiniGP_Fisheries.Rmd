@@ -1,0 +1,43 @@
+---
+title: 'ESM242 MiniGP: Fisheries'
+author: "Emma Tao, Ryan Anderson, Jackson Hayes"
+date: "2024-11-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+$$E[2i]=mean(E)-E[i]$$
+
+$$H[i]=q*X[1i]*E[1i]+q*X[2i]*E[2i]$$
+
+```{r Harvest at time t (H_t)}
+
+#sum of harvest of 2 reefs
+#X= modeled stock
+
+
+```
+
+$$mean(E)=E[i]=E[2i]$$
+$$maxln(sum(H[i]))$$
+
+```{r Total Effort at Time t (Sum of effort on both reefs)}
+
+#E1i, E2i are effort for the individual reefs
+
+
+```
+
+
+$$X[1i]=X[1i-1]+F(X[1i-1])-H[1i]$$
+$$pop_growth_rate=r*x*(1-x/k)$$
+
+```{r Stock Dynamics)}
+
+
+
+
+```
