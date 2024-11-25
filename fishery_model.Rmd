@@ -279,3 +279,125 @@ ggplot(harvest_data, aes(x = time, y = harvest, color = reef)) + geom_line() + l
 ```
 
 
+```{r}
+
+SIMULATION_LENGTH_val <- 24
+INITIAL_STOCK <- replicate(24,rnorm(1, mean=1000, sd=20)) 
+CARRYING_CAPACITY <- replicate(24,rnorm(1, mean=2000, sd=40)) 
+GROWTH_RATE <- replicate(24,rnorm(1, mean=0.1, sd=0.02)) 
+EFFORT_CAP <-  15
+HARVEST_CONSTANT <-  replicate(24,rnorm(1, mean=0.05, sd=0.01))
+MIGRATION_CONSTANT <- replicate(24,rnorm(1, mean=0, sd=0.01)) 
+UTIL_SCALING_CONSTANT <- replicate(24,rnorm(1, mean=1, sd=0.2)) 
+RHO <-  0.95
+
+
+```
+
+
+```{r}
+
+
+result <- nloptr(x0 = c(rep(1, SIMULATION_LENGTH), rep(1, SIMULATION_LENGTH)), 
+                 eval_f = objective_function, 
+                 lb = c(rep(0, SIMULATION_LENGTH), rep(0, SIMULATION_LENGTH)), 
+                 ub = c(rep(EFFORT_CAP, SIMULATION_LENGTH), rep(EFFORT_CAP, SIMULATION_LENGTH)),
+                 eval_g_ineq = constraint_function, 
+                 opts = options, 
+                 max_effort = EFFORT_CAP, 
+                 initial_stock = INITIAL_STOCK[1], 
+                 carrying_capacity = CARRYING_CAPACITY[1], 
+                 r = GROWTH_RATE[1], 
+                 q = HARVEST_CONSTANT[1], 
+                 z = MIGRATION_CONSTANT[1], 
+                 num_periods = SIMULATION_LENGTH, 
+                 rho=RHO, 
+                 util_scaling_constant = UTIL_SCALING_CONSTANT[1])
+
+optimal_values <- result$solution
+
+optimal_run <- run_model(optimal_values[1:SIMULATION_LENGTH], 
+                    optimal_values[(SIMULATION_LENGTH+1):(2*SIMULATION_LENGTH)], 
+                    EFFORT_CAP, 
+                    INITIAL_STOCK[1], 
+                    CARRYING_CAPACITY[1], 
+                    GROWTH_RATE[1], 
+                    HARVEST_CONSTANT[1], 
+                    MIGRATION_CONSTANT[1], 
+                    SIMULATION_LENGTH, 
+                    RHO, 
+                    UTIL_SCALING_CONSTANT[1])
+
+result_vals<-data.frame(optimal_run)
+
+for (i in 2:24){
+
+result_next <- nloptr(x0 = c(rep(1, SIMULATION_LENGTH), rep(1, SIMULATION_LENGTH)), 
+                 eval_f = objective_function, 
+                 lb = c(rep(0, SIMULATION_LENGTH), rep(0, SIMULATION_LENGTH)), 
+                 ub = c(rep(EFFORT_CAP, SIMULATION_LENGTH), rep(EFFORT_CAP, SIMULATION_LENGTH)),
+                 eval_g_ineq = constraint_function, 
+                 opts = options, 
+                 max_effort = EFFORT_CAP, 
+                 initial_stock = INITIAL_STOCK[i], 
+                 carrying_capacity = CARRYING_CAPACITY[i], 
+                 r = GROWTH_RATE[i], 
+                 q = HARVEST_CONSTANT[i], 
+                 z = MIGRATION_CONSTANT[i], 
+                 num_periods = SIMULATION_LENGTH, 
+                 rho=RHO, 
+                 util_scaling_constant = UTIL_SCALING_CONSTANT[i])
+
+optimal_values_next <- result_next$solution
+
+optimal_run_next <- run_model(optimal_values_next[1:SIMULATION_LENGTH], 
+                    optimal_values_next[(SIMULATION_LENGTH+1):(2*SIMULATION_LENGTH)], 
+                    EFFORT_CAP, 
+                    INITIAL_STOCK[i], 
+                    CARRYING_CAPACITY[i], 
+                    GROWTH_RATE[i], 
+                    HARVEST_CONSTANT[i], 
+                    MIGRATION_CONSTANT[i], 
+                    SIMULATION_LENGTH, 
+                    RHO, 
+                    UTIL_SCALING_CONSTANT[i])
+
+for (i in 1:24){
+  result_vals$stock1[i]<-result_vals$stock1[i]+optimal_run_next$stock1[i]
+  result_vals$stock2[i]<-result_vals$stock2[i]+optimal_run_next$stock2[i]
+  result_vals$reproductive_growth_1[i]<-result_vals$reproductive_growth_1[i]+optimal_run_next$reproductive_growth_1[i]
+  result_vals$reproductive_growth_2[i]<-result_vals$reproductive_growth_2[i]+optimal_run_next$reproductive_growth_2[i]
+  result_vals$immigration_1[i]<-result_vals$immigration_1[i]+optimal_run_next$immigration_1[i]
+  result_vals$immigration_2[i]<-result_vals$immigration_2[i]+optimal_run_next$immigration_2[i]
+  result_vals$harvest_1[i]<-result_vals$harvest_1[i]+optimal_run_next$harvest_1[i]
+  result_vals$harvest_2[i]<-result_vals$harvest_2[i]+optimal_run_next$harvest_2[i]
+  result_vals$harvest_total[i]<-result_vals$harvest_total[i]+optimal_run_next$harvest_total[i]
+  result_vals$present_utility[i]<-result_vals$present_utility[i]+optimal_run_next$present_utility[i]
+}
+}
+
+for (i in 1:24){
+  result_vals$stock1[i]<-result_vals$stock1[i]/24
+  result_vals$stock2[i]<-result_vals$stock2[i]/24
+  result_vals$reproductive_growth_1[i]<-result_vals$reproductive_growth_1[i]/24
+  result_vals$reproductive_growth_2[i]<-result_vals$reproductive_growth_2[i]/24
+  result_vals$immigration_1[i]<-result_vals$immigration_1[i]/24
+  result_vals$immigration_2[i]<-result_vals$immigration_2[i]/24
+  result_vals$harvest_1[i]<-result_vals$harvest_1[i]/24
+  result_vals$harvest_2[i]<-result_vals$harvest_2[i]/24
+  result_vals$harvest_total[i]<-result_vals$harvest_total[i]/24
+  result_vals$present_utility[i]<-result_vals$present_utility[i]/24
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
