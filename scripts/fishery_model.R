@@ -67,8 +67,8 @@ run_model <- function(E1, E2, max_effort, initial_stock, carrying_capacity,
   }
   
   # Return a dataframe with all the data
-  return(data.frame(stock1, stock2, reproductive_growth_1, reproductive_growth_2, 
-                    immigration_1, immigration_2, harvest_1, harvest_2, 
+  return(data.frame(effort1=E1, effort2=E2, stock1, stock2, reproductive_growth_1, reproductive_growth_2,
+                    immigration_1, immigration_2, harvest_1, harvest_2,
                     harvest_total, present_utility))
 }
 
@@ -107,8 +107,9 @@ constraint_function <- function(choice, max_effort, initial_stock, carrying_capa
 # Set up the BAU constraint
 constraint_function_BAU <- function(choice, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant){
   # Define the gamma constant, or critical threshold for stock depletion switching under BAU
-  GAMMA <- 5
-  
+  GAMMA <- 200
+  ONE_REEF_ONLY_PENALTY <- 1.8
+  DEPLETION_SWITCHING_PENALTY <- 50
   # Extract E1 and E2.
   # this will require subindexing the vector
   E1 <- choice[1:num_periods]
@@ -121,7 +122,7 @@ constraint_function_BAU <- function(choice, max_effort, initial_stock, carrying_
   # "one reef at a time" criterion
   # taking product of E1 and E2 will give us a vector consisting entirely
   # of zeroes if it is one reef at a time
-  one_reef_only <- E1 * E2
+  one_reef_only <- E1 * E2 * ONE_REEF_ONLY_PENALTY
   
   # "switching beneath appropriate threshold" criterion
   # we'll loop through the model data, and find points where a switch happens
@@ -129,11 +130,12 @@ constraint_function_BAU <- function(choice, max_effort, initial_stock, carrying_
   # stock in the last period is below a certain threshold
   depletion_switching <- rep(0, num_periods)
   for(i in 2:num_periods){
+
    if(E1[i] == 0 & E1[i-1] > 0 & model_data$stock1[i-1] > GAMMA){
-     depletion_switching[i] <- 1
+     depletion_switching[i] <- DEPLETION_SWITCHING_PENALTY
    }
    if(E2[i] == 0 & E2[i-1] > 0 & model_data$stock2[i-1] > GAMMA){
-     depletion_switching[i] <- 1
+     depletion_switching[i] <- DEPLETION_SWITCHING_PENALTY
    }
   }
   
