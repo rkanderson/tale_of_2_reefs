@@ -94,6 +94,8 @@ $\rho$ is the discount term.
 
 # Model Implementation
 
+
+
 ## Setting Up
 
 ```{r}
@@ -271,9 +273,6 @@ harvest_data <- data.frame(time = 1:SIMULATION_LENGTH, harvest1 = optimal_run$ha
 harvest_data <- gather(harvest_data, key = "reef", value = "harvest", -time)
 
 ggplot(harvest_data, aes(x = time, y = harvest, color = reef)) + geom_line() + labs(title = "Harvest Over Time", x = "Time", y = "Harvest")
-
-
-
 
 
 ```
