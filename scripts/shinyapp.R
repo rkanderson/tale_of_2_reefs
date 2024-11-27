@@ -34,6 +34,7 @@ ui <- fluidPage(
       sliderInput("num_periods", "Simulation Length", min = 12, max = 60, value = SIMULATION_LENGTH, step = 1.0),
       sliderInput("rho", "Discount Rate (rho)", min = 0, max = 1, value = RHO, step = 0.05),
       sliderInput("util_scaling_constant", "Utility Scaling Constant", min = 0.001, max = 2, value = UTIL_SCALING_CONSTANT, step = 0.001),
+      sliderInput("util_cost_per_trip", "Utility Cost per Trip", min = 0, max = 100, value = 0, step = 0.001),
       checkboxInput("use_BAU", "Use Business as Usual"),
       sliderInput("gamma", "BAU Threshold", min = 10, max = 10000, value = 500, step = 1.0)
     ),
@@ -62,7 +63,8 @@ server <- function(input, output) {
       z = input$z,
       num_periods = input$num_periods,
       rho = input$rho,
-      util_scaling_constant = input$util_scaling_constant
+      util_scaling_constant = input$util_scaling_constant,
+      util_cost_per_trip = input$util_cost_per_trip
     )
   })
   
@@ -80,7 +82,8 @@ server <- function(input, output) {
       z = input$z,
       num_periods = input$num_periods,
       rho = input$rho,
-      util_scaling_constant = input$util_scaling_constant
+      util_scaling_constant = input$util_scaling_constant,
+      util_cost_per_trip = input$util_cost_per_trip
     )
   })
   

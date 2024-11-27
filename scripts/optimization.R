@@ -7,10 +7,10 @@
 
 optimize_fishery_model <- function(x0, max_effort, initial_stock, carrying_capacity, 
                                    r, q, z, num_periods, 
-                                   rho, util_scaling_constant) {
+                                   rho, util_scaling_constant, util_cost_per_trip) {
   # Set seed first
   set.seed(1234)
-  
+
   # Options
   local_opts<-list("algorithm"="NLOPT_LN_COBYLA",xtol_rel=1e-15)
   options=list("algorithm"="NLOPT_LN_AUGLAG",xtol_rel=1e-15,maxeval=32000,"local_opts"=local_opts)
@@ -26,6 +26,8 @@ optimize_fishery_model <- function(x0, max_effort, initial_stock, carrying_capac
   num_periods <- as.numeric(num_periods)
   rho <- as.numeric(rho)
   util_scaling_constant <- as.numeric(util_scaling_constant)
+  util_cost_per_trip <- as.numeric(util_cost_per_trip)
+  
   
   
   # Run optimization with supplied parameters
@@ -35,13 +37,13 @@ optimize_fishery_model <- function(x0, max_effort, initial_stock, carrying_capac
                    carrying_capacity = carrying_capacity, r = r, 
                    q = q, z = z, 
                    num_periods = num_periods, rho=rho, 
-                   util_scaling_constant = util_scaling_constant)
+                   util_scaling_constant = util_scaling_constant, util_cost_per_trip = util_cost_per_trip)
   
   # Extract the optimal values
   optimal_values <- result$solution
   
   # Run the model with opimal values
-  optimal_run <- run_model(optimal_values[1:num_periods], optimal_values[(num_periods+1):(2*num_periods)], max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant)
+  optimal_run <- run_model(optimal_values[1:num_periods], optimal_values[(num_periods+1):(2*num_periods)], max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant, util_cost_per_trip)
   
   return(list(optimal_values = optimal_values, optimal_run = optimal_run))
   

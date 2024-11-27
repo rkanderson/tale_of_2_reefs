@@ -17,7 +17,7 @@
 # Returns: 
 #   dataframe with columns for stock1, stock2, reproductive_growth_1, reproductive
 run_model <- function(E1, E2, max_effort, initial_stock, carrying_capacity, 
-                      r, q, z, num_periods, rho, util_scaling_constant) {
+                      r, q, z, num_periods, rho, util_scaling_constant, util_cost_per_trip) {
   # Initialize vectors to track everything we need.
   stock1 <- vector(mode = "numeric", length = num_periods)
   stock2 <- vector(mode = "numeric", length = num_periods)
@@ -62,7 +62,7 @@ run_model <- function(E1, E2, max_effort, initial_stock, carrying_capacity,
     harvest_total[i] <- harvest_1[i] + harvest_2[i]
     
     # Present utility -- defined as the discounted log of the harvest_total
-    present_utility[i] <- rho^(i-1)*log(util_scaling_constant * harvest_total[i] + 1)
+    present_utility[i] <- rho^(i-1)*(log(util_scaling_constant * harvest_total[i] + 1) - util_cost_per_trip*(E1[i] + E2[i]))
     
   }
   
@@ -75,7 +75,7 @@ run_model <- function(E1, E2, max_effort, initial_stock, carrying_capacity,
 
 # Objective Function
 # assume choice is a vector consisting of 2 elements: E1 and E2
-objective_function <- function(choice, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant){
+objective_function <- function(choice, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant, util_cost_per_trip){
   
   
   # Extract E1 and E2
@@ -84,7 +84,7 @@ objective_function <- function(choice, max_effort, initial_stock, carrying_capac
   
   
   # Run the model
-  model_data <- run_model(E1, E2, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant)
+  model_data <- run_model(E1, E2, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant, util_cost_per_trip)
   
   # UTILITY_COST_PER_TRIP <- 100
   # browser()
@@ -96,7 +96,7 @@ objective_function <- function(choice, max_effort, initial_stock, carrying_capac
 # Constraint Function
 # require that the sum of the two choices is equal to the max effort
 # assume choice is a vector consisting of 2 subvectors: E1 and E2
-constraint_function <- function(choice, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant){
+constraint_function <- function(choice, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant, util_cost_per_trip){
   # Extract E1 and E2.
   # this will require subindexing the vector
   E1 <- choice[1:num_periods]
@@ -114,7 +114,8 @@ constraint_function <- function(choice, max_effort, initial_stock, carrying_capa
 # This will be done in a loop until the end of the simulation period.
 run_model_BAU <- function(gamma, max_effort, 
                           initial_stock, carrying_capacity, 
-                          r, q, z, num_periods, rho, util_scaling_constant) {
+                          r, q, z, num_periods, rho, util_scaling_constant, 
+                          util_cost_per_trip) {
   # Initialize vectors to track everything we need.
   stock1 <- vector(mode = "numeric", length = num_periods)
   stock2 <- vector(mode = "numeric", length = num_periods)
@@ -198,7 +199,7 @@ run_model_BAU <- function(gamma, max_effort,
     }
     
     # Present utility -- defined as the discounted log of the harvest_total
-    present_utility[i] <- rho^(i-1)*log(util_scaling_constant * harvest_total[i] + 1)
+    present_utility[i] <- rho^(i-1)*(log(util_scaling_constant * harvest_total[i] + 1) - util_cost_per_trip*(E1[i]+E2[i]))
     
   }
   

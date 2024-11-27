@@ -51,26 +51,15 @@ $$ E_{1t} + E_{2t} \le E_{max} $$
 
 Our objective is going to be to maximize
 
-$$ Obj(E_{1}, E_{2}) = \sum_{t=1}^T \rho^{t-1} ln(aH_t+1) $$
+$$ Obj(E_{1}, E_{2}) = \sum_{t=1}^T \rho^{t-1} \{ln(aH_t+1) - c(E_{1t}+E_{2t})\} $$
 
 We are treating the natural log as a sort of utility function, with it's concavity representing the diminishing returns of harvesting more fish. The +1 term is to bound the utility function to be zero at the minimum when $H_t=0$. The constant $a$ is a parameter chosen to scale values of $H_t$ such that the differences will be ideal for optimization.
 
+We also build in a utility cost term in this model. This term is linear in the fishing effort, and is meant to represent the cost of running a fishing trip. The constant $c$ is a parameter chosen to scale the cost of fishing to our "utility" unit.
+
 ## Business as Usual
 
-The business as usual scenario we wish to simulate is one in which a fishing company exhausts the population of one reef before moving onto the next. To model a scenario like this, we'll impose an additional constraint on the fishing effort. 
-
-First, we say that only one reef can be fished at a time. So we can codify this as
-
-$$ E_{1t} \times E_{2t} = 0 $$
-
-for all $t$.
-
-
-Then we decide on a critical threshold value for the stock at which point the company will move to the next reef, call this $\gamma$. We'll then impose the following constraints:
-
-$$ E_{1t} \neq 0 \land E_{1(t+1)} = 0 \implies X_{1t} \leq \gamma $$
-$$ E_{2t} \neq 0 \land E_{2(t+1)} = 0 \implies X_{2t} \leq \gamma $$
-
+Business as usual is a pattern we'll define as maximum effort being targeted on one reef until that reef is depleted (we'll consider the reef to be depleted when the stock drops below some threshold), at which point effort is targeted toward the 2nd reef until that other reef is depleted, and so on.
 
 ## Model Parameter Table
 
@@ -87,3 +76,5 @@ Unless otherwise stated, all parameter estimates were obtained by a best-judgeme
 | Simulation Time         | $T$        | 24                 | Periods (months) to simulate.                       |
 | Discount Term           | $\rho$     | 0.9                 | Discount term for objective function.                |
 | Utility Scaling Constant| $a$        | 1                   | Scaling constant for objective function.             |
+| Threshold for reef switching | $\gamma$        | 200?                   | The threshold that the stock needs to dip below in order to cause reef switching in a BAU scenario.             |
+| Utility cost per fishing trip | $c$        | ?                  | The amount of utility cost associated with doing a fishing trip            |

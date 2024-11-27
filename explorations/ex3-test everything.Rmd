@@ -48,9 +48,13 @@ z <- 0.2
 num_periods <- 24
 rho <- 0.95
 util_scaling_constant <- 1
+util_cost_per_trip <- 0.1
+```
+
+```{r}
 
 # Run the optimization
-result <- optimize_fishery_model(x0, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant)
+result <- optimize_fishery_model(x0, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant, util_cost_per_trip)
 
 # get the optimal run
 optimal_run <- result$optimal_run
