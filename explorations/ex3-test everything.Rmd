@@ -1,0 +1,68 @@
+---
+title: 'ESM242 MiniGP: Fisheries -- Model Component'
+author: "Emma Tao, Ryan Anderson, Jackson Hayes"
+date: "2024-11-17"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Setting Up
+
+```{r}
+# Clear Env
+rm(list = ls())
+
+# Load Libraries
+library(tidyverse)
+library(nloptr)
+library(knitr)
+
+# Set seed for reproducibility
+set.seed(1234)
+```
+
+```{r}
+# Load the model functions
+source(here("scripts", "fishery_model.R"))
+source(here("scripts", "optimization.R"))
+source(here("scripts", "model_viz.R"))
+
+# x0, max_effort, initial_stock, carrying_capacity, 
+                                   # r, q, z, num_periods, 
+                                   # rho, util_scaling_constant
+# Now let's set up the parameters for the model
+x0 <- 5
+max_effort <- 15
+initial_stock <- 1000
+carrying_capacity <- 2000
+r <- 0.1
+q <- 0.05
+z <- 0.2
+num_periods <- 24
+rho <- 0.95
+util_scaling_constant <- 1
+
+# Run the optimization
+result <- optimize_fishery_model(x0, max_effort, initial_stock, carrying_capacity, r, q, z, num_periods, rho, util_scaling_constant)
+
+# get the optimal run
+optimal_run <- result$optimal_run
+
+# viz results
+plots <- vizualize_fishery_model_run(optimal_run)
+
+plots$stock_plot
+plots$effort_plot
+plots$harvest_plot
+```
+
+
+
+

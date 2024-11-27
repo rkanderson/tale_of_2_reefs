@@ -408,7 +408,7 @@ fishing effort that can go across the 2 reefs during any time period
 <h2>Objective Function</h2>
 <p>Our objective is going to be to maximize</p>
 <p><span class="math display">\[ Obj(E_{1t}, E_{2t}) = \sum_{t=1}^T
-\rho^t ln(aH_t+1) \]</span></p>
+\rho^{t-1} ln(aH_t+1) \]</span></p>
 <p>We are treating the natural log as a sort of utility function, with
 it’s concavity representing the diminishing returns of harvesting more
 fish. The +1 term is to bound the utility function to be zero at the

@@ -51,7 +51,7 @@ $$ E_{1t} + E_{2t} \le E_{max} $$
 
 Our objective is going to be to maximize
 
-$$ Obj(E_{1t}, E_{2t}) = \sum_{t=1}^T \rho^{t-1} ln(aH_t+1) $$
+$$ Obj(E_{1}, E_{2}) = \sum_{t=1}^T \rho^{t-1} ln(aH_t+1) $$
 
 We are treating the natural log as a sort of utility function, with it's concavity representing the diminishing returns of harvesting more fish. The +1 term is to bound the utility function to be zero at the minimum when $H_t=0$. The constant $a$ is a parameter chosen to scale values of $H_t$ such that the differences will be ideal for optimization.
 
