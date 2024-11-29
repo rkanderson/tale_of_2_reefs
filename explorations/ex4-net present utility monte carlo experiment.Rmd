@@ -1,0 +1,27 @@
+```{r}
+# clear env
+rm(list = ls())
+
+# Load Libraries
+library(tidyverse)
+library(nloptr)
+library(knitr)
+library(here)
+
+# source() our libraries
+source(here("scripts", "fishery_model.R"))
+source(here("scripts", "optimization.R"))
+source(here("scripts", "model_viz.R"))
+```
+
+The goal of this exploration is to try to run the optimization of the fishery model
+but many iterations with values sampled from various distributions.
+The goal will be to get a confidence interval for the net present utility of the fishery model.
+
+To get this done, we'll create a function that runs the monte carlo on a set of inputs. it will perform the sampling from the distrubituons, run the optimizations, collect the values. Then it will return the values for further analysis.
+
+
+```{r}
+
+```
+

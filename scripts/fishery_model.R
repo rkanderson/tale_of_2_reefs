@@ -198,8 +198,10 @@ run_model_BAU <- function(gamma, max_effort,
       effort2[i] <- 0
     }
     
+    harvest_total[i] <- harvest_1[i] + harvest_2[i]
+    
     # Present utility -- defined as the discounted log of the harvest_total
-    present_utility[i] <- rho^(i-1)*(log(util_scaling_constant * harvest_total[i] + 1) - util_cost_per_trip*(E1[i]+E2[i]))
+    present_utility[i] <- rho^(i-1)*(log(util_scaling_constant * harvest_total[i] + 1) - util_cost_per_trip*(effort1[i] + effort2[i]))
     
   }
   

@@ -1,5 +1,11 @@
+# Clear env
+rm(list = ls())
+
 # Load required libraries
 library(shiny)
+library(here)
+library(nloptr)
+library(tidyverse)
 
 # Source the necessary scripts
 source(here("scripts", "fishery_model.R"))
@@ -41,6 +47,7 @@ ui <- fluidPage(
     
     mainPanel(
       h3("Optimization Results"),
+      textOutput("optimal_utility"),
       plotOutput("stock_plot"),
       plotOutput("harvest_plot"),
       plotOutput("effort_plot")
@@ -85,6 +92,20 @@ server <- function(input, output) {
       util_scaling_constant = input$util_scaling_constant,
       util_cost_per_trip = input$util_cost_per_trip
     )
+  })
+  
+  # Render optimal utility
+  output$optimal_utility <- renderText({
+    if (input$use_BAU) {
+      result <- bau_result()
+    } else {
+      result <- optimization_result()$optimal_run
+    }
+    present_utility_vals <- result$present_utility
+    # browser()
+    
+    # Display, rounded to 3 decimal places
+    paste("Net Present Utility: ", round(sum(present_utility_vals), 3))
   })
   
   # Render plots
