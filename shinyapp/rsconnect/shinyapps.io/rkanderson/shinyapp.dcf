@@ -1,0 +1,10 @@
+name: shinyapp
+title:
+username: rkanderson
+account: rkanderson
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15591235
+bundleId: 10965540
+url: https://rkanderson.shinyapps.io/shinyapp/
+version: 1
