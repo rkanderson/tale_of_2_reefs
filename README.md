@@ -1,69 +1,107 @@
+# Tale of Two Reefs
 
 ## Context
 
-This project was completed for a course -- ESM 242 Natural Resource Economics, taught in Fall quarter of 2024 at the Bren School, UCSB.
-Professor was Dr. Andrew Plantinga. For the final project, we were to look at a natural resource optimization problem of our choice.
+This project was completed for the course **ESM 242: Natural Resource Economics**, taught in Fall 2024 at the Bren School, UCSB. The course was instructed by **Dr. Andrew Plantinga**. For the final project, we were asked to explore a natural resource optimization problem of our choice.
 
-This project was inspired by a real experience of my peer Jackson Hayes, who is a very outdoorsy person and loves spearfishing (among many other ocean activities).
+This project was inspired by a real experience of my peer **Jackson Hayes**, who is an avid outdoorsman and enjoys spearfishing, among other ocean activities. At County Line in Malibu, he visited a nearshore reef and noticed that fish populations had been drastically reduced. He observed that a local fishing charter company repeatedly visited the same reef. Jackson suggested that the captain alternate reefs to allow the fish populations time to recover, but this idea was rejected. We decided to model this situation and conduct a more quantitative investigation.  
 
-At county line in Malibu, he would go to a nearshore reef, and found the fish populations had been drastically reduced. He noticed that the local fishing charter boat company was taking trips out to the same reef repeatedly. Jackson had the idea to suggest that the captain alternate reefs to give the fish populations time to recover, a suggestion which was rejected. And so we began this project to model the situation and conduct some more quantitative-heavy invistegitation. 
+## Results
+
+Under the realistic ranges of parameters we tested, we found that **harvesting a single reef was the optimal solution**, which contradicted our initial hypothesis. Our parameters were based on Jackson's observations and intuition, so this is an important caveat.
+
+## Future Work
+
+## Future Work
+
+Some avenues that could extend and improve this project:
+
+1. **Better modeling of utility costs per trip:**  
+   One interesting finding was that introducing a fixed cost per fishing trip produced alternating behaviors in the optimized harvest schedule (see slide 21 in our presentation), which aligns more closely with our original expectations. This suggests that the **utility cost of fishing trips** may play a key role in reef management, and developing a more realistic model of these costs could be a valuable direction for future work.
+
+2. **Recurring monthly schedule optimization:**  
+   Currently, we model harvests over 24 monthly periods, which imposes a **limited event horizon**. A potential extension is to optimize a **12-month schedule** that could then be repeated across multiple years. This would reduce the number of variables in the optimization while allowing the results to be applied over an indefinite timeframe, potentially producing more practical and generalizable management recommendations.
 
 
-Under the realistic ranges of parameters we tested, we actually found that harvesting a single reef was the optimal solution, contradicting our initial hypothesis. Our realistic parameters were just derived from Jackson's intuition based on what he'd seen, so that's definitely a caveat. 
 
+---
 
-## Link to interactive shiny app
-https://rkanderson.shinyapps.io/tale_of_2_reefs/
+## Links
 
-## Link to our slides presentation
-https://docs.google.com/presentation/d/1reWezVA3fjr1qzyvOK9XN3tgUJsTUQMyKtnIr2PzJhQ/edit?slide=id.g319e17b3570_0_32#slide=id.g319e17b3570_0_32
+- **Interactive Shiny App:** [https://rkanderson.shinyapps.io/tale_of_2_reefs/](https://rkanderson.shinyapps.io/tale_of_2_reefs/)  
+- **Slides Presentation:** [Google Slides](https://docs.google.com/presentation/d/1reWezVA3fjr1qzyvOK9XN3tgUJsTUQMyKtnIr2PzJhQ/edit?slide=id.g319e17b3570_0_32#slide=id.g319e17b3570_0_32)
 
-## Credits to my Bren colleagues who worked on this project with me during Fall Quarter of 2024
+---
 
-Jackson Hayes: https://www.linkedin.com/in/jackson-hayes-234aa6134/
+## Credits
 
+Thanks to my Bren colleagues who collaborated on this project:
 
-Emma Tao: https://www.linkedin.com/in/emma-tao-8580861a6/
+- **Jackson Hayes:** [LinkedIn](https://www.linkedin.com/in/jackson-hayes-234aa6134/)  
+- **Emma Tao:** [LinkedIn](https://www.linkedin.com/in/emma-tao-8580861a6/)
 
+---
 
 ## Stock Dynamics
-The basic stock dynamic equation is
 
-$$X_{t+1} = X_t + F(X_t) - H_t + M(X_t)$$
-where
-- $F(X)$ is the amount of fish added to the stock at period t due to reproductive growth
-- $H_t$, is fish harvested in period t
-- $M(X_t)$ is the number of fish added to the stock in period $t$ due to migration
+The basic stock dynamic equation is:
 
-We'll model $F(X)$ as follows:
+\[
+X_{t+1} = X_t + F(X_t) - H_t + M(X_t)
+\]
 
-$$ F(X) = rX_t(1-\frac{X_t}{K})$$
+where:  
+- \(F(X_t)\) is the fish added to the stock at period \(t\) due to reproductive growth,  
+- \(H_t\) is the fish harvested at period \(t\),  
+- \(M(X_t)\) is the fish added due to migration.  
 
-We'll model M (Xt) as follows:
+We model \(F(X_t)\) using logistic growth:
 
-$$M(X) = z(K-X_t)$$
+\[
+F(X_t) = r X_t \left( 1 - \frac{X_t}{K} \right)
+\]
 
-where z is some set parameter corresponding to the rate at which migration occurs. If z = 0, no migration occurs. If z = 1, the entire carrying capacity of the reef is filled within a single time period. The amount of harvest that occurs in a given period will be the sum of the harvests that occur at the two individual reefs:
+and \(M(X_t)\) as:
 
+\[
+M(X_t) = z (K - X_t)
+\]
 
-Harvest Equations
-$$H_t=q(E_{1t}X_{1t}+E_{2t}X_{2t})$$
-where q is a catchability coefficient, and E1t it and E2t are the fishing efforts at reef 1 and reef 2 respectively.
-To represent the limited resources available to our hypothetical recreational fishing company, we'll impose a constraint on the total fishing effortthat can go across the 2 reefs during any time period (E_max):
+where \(z\) is the migration rate parameter.  
+- \(z = 0\) → no migration  
+- \(z = 1\) → the reef reaches full carrying capacity in one time period  
 
-$$ E1t + E2t <= Emax$$
-^Fix the format of this
+The total harvest in a period is the sum of harvests at the two reefs:
 
-Objective Function: Our objective is going to be to maximize
+\[
+H_t = q (E_{1t} X_{1t} + E_{2t} X_{2t})
+\]
 
-$$Obj(E_1,E_2) = \sum_{t=1}^T \rho^{t-1} (ln(aH_t+1)-c(E_{1t}+E_{2t})) $$
+where \(q\) is the catchability coefficient, and \(E_{1t}\), \(E_{2t}\) are fishing efforts at reef 1 and reef 2, respectively.  
 
-We are treating the natural log as a sort of utility function, with it's concavity representing the diminishing returns of harvesting more fish. The +1
-term is to bound the utility function to be zero at the minimum when H_t = 0. The constant a is a parameter chosen to scale values of H, such that the differences will be ideal for optimization.
+To model the limited resources of our hypothetical recreational fishing company, we impose a constraint on total effort:
 
+\[
+E_{1t} + E_{2t} \leq E_{\text{max}}
+\]
 
-## A Parameter Table
+---
 
-<TODO WILL ADD>
+## Objective Function
 
+Our goal is to maximize:
 
+\[
+\text{Obj}(E_1, E_2) = \sum_{t=1}^T \rho^{t-1} \Big( \ln(a H_t + 1) - c (E_{1t} + E_{2t}) \Big)
+\]
+
+- The natural log serves as a utility function, where its concavity captures **diminishing returns** from harvesting more fish.  
+- The \(+1\) term ensures utility is zero when \(H_t = 0\).  
+- The constant \(a\) scales \(H_t\) for optimization purposes.  
+- \(c\) is the cost coefficient for fishing effort.
+
+---
+
+## Parameter Table
+
+<TODO: Add parameter table here>
