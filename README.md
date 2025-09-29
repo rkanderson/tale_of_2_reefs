@@ -1,4 +1,6 @@
-# Tale of Two Reefs
+# A Tale of Two Reefs
+
+![](images/2-reefs.png)
 
 ## Context
 
@@ -9,8 +11,6 @@ This project was inspired by a real experience of my peer **Jackson Hayes**, who
 ## Results
 
 Under the realistic ranges of parameters we tested, we found that **harvesting a single reef was the optimal solution**, which contradicted our initial hypothesis. Our parameters were based on Jackson's observations and intuition, so this is an important caveat.
-
-## Future Work
 
 ## Future Work
 
