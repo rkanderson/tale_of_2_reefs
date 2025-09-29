@@ -46,44 +46,44 @@ Thanks to my Bren colleagues who collaborated on this project:
 
 The basic stock dynamic equation is:
 
-\[
+$$
 X_{t+1} = X_t + F(X_t) - H_t + M(X_t)
-\]
+$$
 
 where:  
-- \(F(X_t)\) is the fish added to the stock at period \(t\) due to reproductive growth,  
-- \(H_t\) is the fish harvested at period \(t\),  
-- \(M(X_t)\) is the fish added due to migration.  
+- $F(X_t)$ is the fish added to the stock at period $t$ due to reproductive growth,  
+- $H_t$ is the fish harvested at period $t$,  
+- $M(X_t)$ is the fish added due to migration.  
 
-We model \(F(X_t)\) using logistic growth:
+We model $F(X_t)$ using logistic growth:
 
-\[
+$$
 F(X_t) = r X_t \left( 1 - \frac{X_t}{K} \right)
-\]
+$$
 
-and \(M(X_t)\) as:
+and $M(X_t)$ as:
 
-\[
+$$
 M(X_t) = z (K - X_t)
-\]
+$$
 
-where \(z\) is the migration rate parameter.  
-- \(z = 0\) → no migration  
-- \(z = 1\) → the reef reaches full carrying capacity in one time period  
+where $z$ is the migration rate parameter.  
+- $z = 0$ → no migration  
+- $z = 1$ → the reef reaches full carrying capacity in one time period  
 
 The total harvest in a period is the sum of harvests at the two reefs:
 
-\[
+$$
 H_t = q (E_{1t} X_{1t} + E_{2t} X_{2t})
-\]
+$$
 
-where \(q\) is the catchability coefficient, and \(E_{1t}\), \(E_{2t}\) are fishing efforts at reef 1 and reef 2, respectively.  
+where $q$ is the catchability coefficient, and $E_{1t}$, $E_{2t}$ are fishing efforts at reef 1 and reef 2, respectively.  
 
 To model the limited resources of our hypothetical recreational fishing company, we impose a constraint on total effort:
 
-\[
+$$
 E_{1t} + E_{2t} \leq E_{\text{max}}
-\]
+$$
 
 ---
 
@@ -91,14 +91,14 @@ E_{1t} + E_{2t} \leq E_{\text{max}}
 
 Our goal is to maximize:
 
-\[
+$$
 \text{Obj}(E_1, E_2) = \sum_{t=1}^T \rho^{t-1} \Big( \ln(a H_t + 1) - c (E_{1t} + E_{2t}) \Big)
-\]
+$$
 
 - The natural log serves as a utility function, where its concavity captures **diminishing returns** from harvesting more fish.  
-- The \(+1\) term ensures utility is zero when \(H_t = 0\).  
-- The constant \(a\) scales \(H_t\) for optimization purposes.  
-- \(c\) is the cost coefficient for fishing effort.
+- The $+1$ term ensures utility is zero when $H_t = 0$.  
+- The constant $a$ scales $H_t$ for optimization purposes.  
+- $c$ is the cost coefficient for fishing effort.
 
 ---
 
