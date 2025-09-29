@@ -7,10 +7,10 @@ library(here)
 library(nloptr)
 library(tidyverse)
 
-# Source the necessary scripts
-source(here("scripts", "fishery_model.R"))
-source(here("scripts", "optimization.R"))
-source(here("scripts", "model_viz.R"))
+# # Source the necessary scripts
+source("fishery_model.R")
+source("optimization.R")
+source("model_viz.R")
 
 # Default parameter values
 SIMULATION_LENGTH <- 24
