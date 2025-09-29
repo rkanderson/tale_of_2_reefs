@@ -1,0 +1,77 @@
+---
+title: 'ESM242 MiniGP: Fisheries -- Model Component'
+author: "Emma Tao, Ryan Anderson, Jackson Hayes"
+date: "2024-11-17"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Setting Up
+
+```{r}
+# Clear Env
+rm(list = ls())
+
+# Load Libraries
+library(tidyverse)
+library(nloptr)
+library(knitr)
+library(here)
+
+# Set seed for reproducibility
+set.seed(1234)
+```
+
+
+## Using Modules
+
+```{r}
+# run the module to get the funcitons
+source(here("scripts", "fishery_model.R"))
+source(here("scripts", "optimization.R"))
+source(here("scripts", "model_viz.R"))
+
+```
+
+## Optimization
+
+
+
+## Business as Usual
+```{r}
+SIMULATION_LENGTH <- 24 # Set to 600 eventually, keep it low to test.
+INITIAL_STOCK <- 1000
+CARRYING_CAPACITY <- 2000
+GROWTH_RATE <- 0.1
+EFFORT_CAP <- 15
+HARVEST_CONSTANT <- 0.05
+MIGRATION_CONSTANT <- 0
+UTIL_SCALING_CONSTANT <- 1
+RHO <- 0.95
+```
+
+
+Now let's re-try this process but use the business as usual constraint
+```{r}
+
+# Run the model with opimal values
+run_BAU <- run_model_BAU(100, EFFORT_CAP, INITIAL_STOCK, CARRYING_CAPACITY, GROWTH_RATE, HARVEST_CONSTANT, MIGRATION_CONSTANT, SIMULATION_LENGTH, RHO, UTIL_SCALING_CONSTANT)
+
+
+# Use the function to visualize the model run
+plots_BAU <- vizualize_fishery_model_run(run_BAU)
+
+# show the plots
+plots_BAU$stock_plot
+plots_BAU$harvest_plot
+plots_BAU$effort_plot
+
+
+```
+
